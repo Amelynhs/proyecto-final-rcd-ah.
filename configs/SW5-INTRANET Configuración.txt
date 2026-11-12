@@ -1,0 +1,154 @@
+SW5-INTRANET Configuración
+SW5_Intranet#show running-config
+Building configuration...
+
+Current configuration : 2442 bytes
+!
+version 15.0
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+service password-encryption
+!
+hostname SW5_Intranet
+!
+!
+enable secret 5 $1$mERr$.lv3Lju9VuSBwDyjHFqq7/
+!
+!
+!
+no ip domain-lookup
+!
+vtp mode transparent
+!
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+!
+vlan 110
+ name GUEST
+!
+vlan 120
+ name INTERNAL
+!
+vlan 130
+ name SERVER_PRINTER
+!
+vlan 199
+ name NATIVE
+!
+interface FastEthernet0/1
+ switchport access vlan 120
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/2
+ switchport access vlan 110
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/3
+ switchport access vlan 130
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/4
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/5
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/6
+ switchport mode access
+!
+interface FastEthernet0/7
+ switchport mode access
+!
+interface FastEthernet0/8
+ switchport mode access
+!
+interface FastEthernet0/9
+ switchport mode access
+!
+interface FastEthernet0/10
+ switchport mode access
+!
+interface FastEthernet0/11
+ switchport mode access
+!
+interface FastEthernet0/12
+ switchport mode access
+!
+interface FastEthernet0/13
+ switchport mode access
+!
+interface FastEthernet0/14
+ switchport mode access
+!
+interface FastEthernet0/15
+ switchport mode access
+!
+interface FastEthernet0/16
+ switchport mode access
+!
+interface FastEthernet0/17
+ switchport mode access
+!
+interface FastEthernet0/18
+ switchport mode access
+!
+interface FastEthernet0/19
+ switchport mode access
+!
+interface FastEthernet0/20
+ switchport mode access
+!
+interface FastEthernet0/21
+ switchport mode access
+!
+interface FastEthernet0/22
+ switchport mode access
+!
+interface FastEthernet0/23
+ switchport mode access
+!
+interface FastEthernet0/24
+ switchport mode access
+!
+interface GigabitEthernet0/1
+ switchport trunk native vlan 199
+ switchport trunk allowed vlan 110,120,130,199
+ switchport mode trunk
+!
+interface GigabitEthernet0/2
+ switchport trunk native vlan 199
+ switchport trunk allowed vlan 110,120,130,199
+ switchport mode trunk
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+banner motd ^C Acceso restringido - PF RCD 2026-2 Grupo 1 (ah.net) ^C
+!
+!
+!
+!
+!
+line con 0
+ password 7 080044781D005747405D
+ logging synchronous
+ login
+!
+line vty 0 4
+ password 7 080044781D005747405D
+ login
+line vty 5 15
+ login
+!
+!
+!
+!
+end

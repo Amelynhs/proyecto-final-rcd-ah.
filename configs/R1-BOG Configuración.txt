@@ -1,0 +1,292 @@
+R1-BOG Configuración
+R1_BOG#show running-config
+Building configuration...
+
+Current configuration : 3842 bytes
+!
+version 15.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+service password-encryption
+!
+hostname R1_BOG
+!
+!
+!
+enable secret 5 $1$mERr$.lv3Lju9VuSBwDyjHFqq7/
+!
+!
+!
+!
+!
+!
+no ip cef
+ipv6 unicast-routing
+!
+no ipv6 cef
+!
+ipv6 dhcp pool BOG_STATELESS
+ dns-server 2001:1200:EC11:1::20
+ domain-name ah.net
+!
+!
+!
+username admin secret 5 $1$mERr$.lv3Lju9VuSBwDyjHFqq7/
+!
+!
+license udi pid CISCO2811/K9 sn FTX1017724V-
+!
+!
+!
+crypto isakmp policy 10
+ encr aes 256
+ authentication pre-share
+ group 2
+!
+crypto isakmp key AhVpn2026 address 86.106.77.26
+!
+!
+!
+crypto ipsec transform-set TS_GRE esp-aes 256 esp-sha-hmac
+!
+crypto map CMAP 10 ipsec-isakmp 
+ set peer 86.106.77.26
+ set transform-set TS_GRE 
+ match address VPN_TUNEL
+!
+!
+!
+!
+!
+!
+ip ssh version 2
+no ip domain-lookup
+ip domain-name ah.net
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ no ip address
+ ipv6 address 2001:1200:ED11::1/128
+
+R1_BOG#
+R1_BOG#
+R1_BOG#
+R1_BOG#
+R1_BOG#show running-config
+Building configuration...
+
+Current configuration : 3842 bytes
+!
+version 15.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+service password-encryption
+!
+hostname R1_BOG
+!
+!
+!
+enable secret 5 $1$mERr$.lv3Lju9VuSBwDyjHFqq7/
+!
+!
+!
+!
+!
+!
+no ip cef
+ipv6 unicast-routing
+!
+no ipv6 cef
+!
+ipv6 dhcp pool BOG_STATELESS
+ dns-server 2001:1200:EC11:1::20
+ domain-name ah.net
+!
+!
+!
+username admin secret 5 $1$mERr$.lv3Lju9VuSBwDyjHFqq7/
+!
+!
+license udi pid CISCO2811/K9 sn FTX1017724V-
+!
+!
+!
+crypto isakmp policy 10
+ encr aes 256
+ authentication pre-share
+ group 2
+!
+crypto isakmp key AhVpn2026 address 86.106.77.26
+!
+!
+!
+crypto ipsec transform-set TS_GRE esp-aes 256 esp-sha-hmac
+!
+crypto map CMAP 10 ipsec-isakmp 
+ set peer 86.106.77.26
+ set transform-set TS_GRE 
+ match address VPN_TUNEL
+!
+!
+!
+!
+!
+!
+ip ssh version 2
+no ip domain-lookup
+ip domain-name ah.net
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ no ip address
+ ipv6 address 2001:1200:ED11::1/128
+ ipv6 eigrp 101
+!
+interface Tunnel0
+ no ip address
+ mtu 1476
+ ipv6 address 2001:1200:EC11:100::1/64
+ ipv6 eigrp 101
+ tunnel source Serial0/2/0
+ tunnel destination 86.106.77.26
+ tunnel mode ipv6ip
+!
+!
+interface FastEthernet0/0
+ description DMZ
+ no ip address
+ duplex auto
+ speed auto
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:1200:EC11:1::1/64
+ ipv6 eigrp 101
+!
+interface FastEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+ ipv6 address FE80::1 link-local
+!
+interface FastEthernet0/1.10
+ encapsulation dot1Q 10
+ no ip address
+ ipv6 traffic-filter BOG_GUEST_IN in
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:1200:EA11:10::1/64
+ ipv6 nd other-config-flag
+ ipv6 eigrp 101
+ ipv6 dhcp server BOG_STATELESS
+!
+interface FastEthernet0/1.20
+ encapsulation dot1Q 20
+ no ip address
+ ipv6 traffic-filter BOG_INT_IN in
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:1200:EA11:20::1/64
+ ipv6 nd other-config-flag
+ ipv6 eigrp 101
+ ipv6 dhcp server BOG_STATELESS
+!
+interface FastEthernet0/1.30
+ encapsulation dot1Q 30
+ no ip address
+ ipv6 traffic-filter BOG_SRV_IN in
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:1200:EA11:30::1/64
+ ipv6 eigrp 101
+!
+interface FastEthernet0/1.99
+ encapsulation dot1Q 99 native
+ no ip address
+!
+interface Serial0/2/0
+ description a ISP_BOG
+ ip address 86.106.77.2 255.255.255.252
+ crypto map CMAP
+!
+interface Serial0/2/1
+ no ip address
+ clock rate 2000000
+ shutdown
+!
+interface Serial0/3/0
+ no ip address
+ clock rate 2000000
+ shutdown
+!
+interface Serial0/3/1
+ no ip address
+ clock rate 2000000
+ shutdown
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+ipv6 router eigrp 101
+ eigrp router-id 11.11.11.11
+ no shutdown 
+ passive-interface FastEthernet0/1.10
+ passive-interface FastEthernet0/1.20
+ passive-interface FastEthernet0/1.30
+!
+ip classless
+ip route 0.0.0.0 0.0.0.0 86.106.77.1 
+!
+ip flow-export version 9
+!
+ipv6 route 2001:1200:EB21::/48 2001:1200:EC11:100::2
+!
+ip access-list extended VPN_TUNEL
+ permit ip host 86.106.77.2 host 86.106.77.26
+ipv6 access-list BOG_GUEST_IN
+ deny udp 2001:1200:EA11:10::/64 any eq snmp
+ deny udp 2001:1200:EA11:10::/64 any eq 162
+ permit tcp 2001:1200:EA11:10::/64 host 2001:1200:EC11:1::10 eq www
+ deny tcp 2001:1200:EA11:10::/64 host 2001:1200:EC11:1::10 eq 443
+ permit ipv6 any any
+ipv6 access-list BOG_INT_IN
+ permit tcp 2001:1200:EA11:20::/64 host 2001:1200:EC11:1::10 eq 443
+ deny tcp 2001:1200:EA11:20::/64 host 2001:1200:EC11:1::10 eq www
+ permit ipv6 any any
+ipv6 access-list BOG_SRV_IN
+ deny udp 2001:1200:EA11:30::/64 any eq snmp
+ deny udp 2001:1200:EA11:30::/64 any eq 162
+ permit ipv6 any any
+!
+banner motd ^C Acceso restringido - PF RCD 2026-2 Grupo 1 (ah.net) ^C
+!
+!
+!
+snmp-server community AHro1 RO
+snmp-server community AHrw1 RW
+!
+line con 0
+ password 7 080044781D005747405D
+ logging synchronous
+ login
+!
+line aux 0
+!
+line vty 0 4
+ password 7 080044781D005747405D
+ login local
+ transport input ssh
+!
+!
+!
+end
